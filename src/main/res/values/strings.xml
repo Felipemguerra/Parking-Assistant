@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">ParkingAssistant</string>
+
+    <string name="find">Find My Car</string>
+    <string name="set">Set My Location</string>
+    <string name="title">Welcome To ParkingAssistant</string>
+    <string name="select">Please select an option</string>
+    <string name="locationTitle">Set Your Location</string>
+    <string name="instruct">Select your floor and submit</string>
+    <string name="spinner">Select your floor</string>
+    <string name="goback">Go Back</string>
+
+
+    <string-array name="spinnerArray">
+        <item>Select your floor</item>
+        <item>None</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+    </string-array>
+
+</resources>
