@@ -33,16 +33,23 @@
             android:id="@+id/locationBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/selectText"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="83dp" />
+            android:layout_centerVertical="true" />
 
         <Button
             android:id="@+id/findBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/timerBtn"
+            android:layout_below="@+id/timerBtn"
+            android:layout_marginTop="37dp" />
+
+        <Button
+            android:id="@+id/timerBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignStart="@+id/locationBtn"
             android:layout_below="@+id/locationBtn"
-            android:layout_marginTop="62dp" />
+            android:layout_marginTop="39dp" />
     </RelativeLayout>
 </FrameLayout>

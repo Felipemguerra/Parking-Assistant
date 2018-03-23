@@ -15,13 +15,14 @@ public class MainFragment extends Fragment {
 
     private Button set;
     private Button find;
+    private Button timer;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_main, container, false);
         getViews(v);
-        setText(v);
+        setText();
         setListeners();
         return v;
     }
@@ -31,13 +32,15 @@ public class MainFragment extends Fragment {
         select = v.findViewById(R.id.selectText);
         set = v.findViewById(R.id.locationBtn);
         find = v.findViewById(R.id.findBtn);
+        timer = v.findViewById(R.id.timerBtn);
     }
 
-    private void setText(View v) {
+    private void setText() {
         title.setText(getString(R.string.title));
         select.setText(getString(R.string.select));
         set.setText(getString(R.string.set));
         find.setText(getString(R.string.find));
+        timer.setText(getString(R.string.timer));
     }
 
     private void setListeners() {
@@ -53,6 +56,14 @@ public class MainFragment extends Fragment {
             public void onClick(View view) {
                 //check if locationSet is true
                 ((MainActivity)getActivity()).setFindFrag();
+            }
+        });
+
+        timer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //check if locationSet is true
+                ((MainActivity)getActivity()).setTimerFrag();
             }
         });
     }

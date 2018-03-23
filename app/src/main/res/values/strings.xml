@@ -9,7 +9,8 @@
     <string name="instruct">Select your floor and submit</string>
     <string name="spinner">Select your floor</string>
     <string name="goback">Go Back</string>
-
+    <string name="timer">Set Timer</string>
+    <string name="cancel">Cancel Timer</string>
 
     <string-array name="spinnerArray">
         <item>Select your floor</item>
