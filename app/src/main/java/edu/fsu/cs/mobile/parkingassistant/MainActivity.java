@@ -65,10 +65,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void setFindFrag() {
-        FindLocationFragment findFrag = new FindLocationFragment();
-        FragmentTransaction transaction = manager.beginTransaction();
-        transaction.replace(R.id.fragContainer, findFrag, "findFrag");
-        transaction.commit();
+        Intent intent = new Intent(this, SimpleDirectionActivity.class);
+        startActivity(intent);
     }
 
     public void setTimerFrag() {
