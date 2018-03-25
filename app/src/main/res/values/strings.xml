@@ -11,6 +11,8 @@
     <string name="goback">Go Back</string>
     <string name="timer">Set Timer</string>
     <string name="cancel">Cancel Timer</string>
+    <string name="floorStart">You\'re on the </string>
+    <string name="floorEnd">th floor!</string>
 
     <string-array name="spinnerArray">
         <item>Select your floor</item>

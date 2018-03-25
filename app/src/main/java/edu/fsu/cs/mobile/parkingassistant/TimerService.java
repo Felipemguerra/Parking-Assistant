@@ -18,6 +18,8 @@ public class TimerService extends Service {
 
     private Timer timer;
 
+    private int delay;
+
     private final IBinder binder = new LocalBinder();
     private MainActivity.TimerInterface interf;
 
@@ -31,14 +33,15 @@ public class TimerService extends Service {
         return binder;
     }
 
-    public void connect(MainActivity.TimerInterface iface) {
+    public void connect(MainActivity.TimerInterface iface, int d) {
         interf = iface;
+        delay = d;
         start();
     }
 
     public void start() {
         timer = new Timer();
-        timer.schedule(new TimerNotification(), 5000);
+        timer.scheduleAtFixedRate(new TimerNotification(), 0, 1000);
     }
 
     public void cancel() {
@@ -51,9 +54,11 @@ public class TimerService extends Service {
         builder.setSmallIcon(R.mipmap.ic_launcher);
         builder.setOnlyAlertOnce(false);
         builder.setContentTitle("ParkingAssistant");
-        builder.setContentText("You have _ minutes left");
+        if(delay == 0){builder.setContentText("Times Up!");}
+        else {builder.setContentText("You have "+delay/1000+" seconds left");
+            builder.setOngoing(true);}
         nm.notify(1, builder.build());
-        interf.finish();
+        if(delay == 0) {interf.finish();}
     }
 
     public void onDestroy() {
@@ -64,6 +69,7 @@ public class TimerService extends Service {
 
     private class TimerNotification extends TimerTask {
         public void run() {
+            delay -= 1000;
             makeNotification();
         }
     }

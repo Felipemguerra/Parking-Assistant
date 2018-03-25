@@ -43,5 +43,34 @@
             android:layout_alignBottom="@+id/setTimerBtn"
             android:layout_toEndOf="@+id/timerBackBtn" />
 
+        <NumberPicker
+            android:id="@+id/num2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="81dp"
+            android:layout_toEndOf="@+id/num1" />
+
+        <NumberPicker
+            android:id="@+id/num1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/setTimerBtn"
+            android:layout_alignTop="@+id/num2" />
+
+        <NumberPicker
+            android:id="@+id/num4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/cancelBtn"
+            android:layout_alignTop="@+id/num3" />
+
+        <NumberPicker
+            android:id="@+id/num3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/num2"
+            android:layout_toStartOf="@+id/num4" />
+
     </RelativeLayout>
 </android.support.constraint.ConstraintLayout>

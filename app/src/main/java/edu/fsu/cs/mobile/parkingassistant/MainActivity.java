@@ -30,26 +30,6 @@ public class MainActivity extends AppCompatActivity {
         setMainFrag();
     }
 
-    public void setTimer() {
-        interf = new TimerInterface();
-        connection = new ServiceConnection() {
-            @Override
-            public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-                TimerService.LocalBinder binder = (TimerService.LocalBinder) iBinder;
-                timer = binder.getService();
-                timer.connect(interf);
-                bound = true;
-            }
-
-            @Override
-            public void onServiceDisconnected(ComponentName componentName) {
-                timer.onDestroy();
-            }
-        };
-        Intent service = new Intent(this, TimerService.class);
-        bindService(service, connection, Context.BIND_AUTO_CREATE);
-    }
-
     public void setMainFrag() {
         MainFragment mainFrag = new MainFragment();
         FragmentTransaction transaction = manager.beginTransaction();
@@ -65,8 +45,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void setFindFrag() {
-        Intent intent = new Intent(this, SimpleDirectionActivity.class);
-        startActivity(intent);
+        FindLocationFragment findFrag = new FindLocationFragment();
+        FragmentTransaction transaction = manager.beginTransaction();
+        transaction.replace(R.id.fragContainer, findFrag, "findFrag");
+        transaction.commit();
     }
 
     public void setTimerFrag() {
@@ -74,6 +56,26 @@ public class MainActivity extends AppCompatActivity {
         FragmentTransaction transaction = manager.beginTransaction();
         transaction.replace(R.id.fragContainer, timerFrag, "timerFrag");
         transaction.commit();
+    }
+
+    public void setTimer(final int h, final int m) {
+        interf = new TimerInterface();
+        connection = new ServiceConnection() {
+            @Override
+            public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+                TimerService.LocalBinder binder = (TimerService.LocalBinder) iBinder;
+                timer = binder.getService();
+                timer.connect(interf, h*3600000 + m*60000);
+                bound = true;
+            }
+
+            @Override
+            public void onServiceDisconnected(ComponentName componentName) {
+                timer.onDestroy();
+            }
+        };
+        Intent service = new Intent(this, TimerService.class);
+        bindService(service, connection, Context.BIND_AUTO_CREATE);
     }
 
     public void cancelTimer() {
