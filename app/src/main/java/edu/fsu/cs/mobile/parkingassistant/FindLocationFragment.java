@@ -115,21 +115,33 @@ public class FindLocationFragment extends Fragment implements SensorEventListene
                if(Math.abs(cngLat) > Math.abs(cngLong)) {
                    if(cngLat > 0) {
                        //need to go north
-                       changeArrowUp();
+                       if(degree < 45 || degree > 315) changeArrowUp();
+                       else if(degree > 45 && degree < 135) changeArrowLeft();
+                       else if(degree > 135 && degree < 225) changeArrowDown();
+                       else changeArrowRight();
                    }
                    else {
                        //need to go south
-                       changeArrowDown();
+                       if(degree < 45 || degree > 315) changeArrowDown();
+                       else if(degree > 45 && degree < 135) changeArrowRight();
+                       else if(degree > 135 && degree < 225) changeArrowUp();
+                       else changeArrowLeft();
                    }
                }
                else {
                    if(cngLong > 0) {
                        //need to go east
-                       changeArrowRight();
+                       if(degree < 45 || degree > 315) changeArrowRight();
+                       else if(degree > 45 && degree < 135) changeArrowUp();
+                       else if(degree > 135 && degree < 225) changeArrowLeft();
+                       else changeArrowDown();
                    }
                    else {
                        //need to go west
-                       changeArrowLeft();
+                       if(degree < 45 || degree > 315) changeArrowLeft();
+                       else if(degree > 45 && degree < 135) changeArrowDown();
+                       else if(degree > 135 && degree < 225) changeArrowRight();
+                       else changeArrowUp();
                    }
                }
            }

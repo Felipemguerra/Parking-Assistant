@@ -81,6 +81,7 @@ public class SetLocationFragment extends android.app.Fragment {
                     else {
                         getActivity().requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 0);
                     }
+
                 }
             }
         });
