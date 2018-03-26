@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
         void finish() {
             bound = false;
             unbindService(connection);
-            timer.cancel();
+            timer.onDestroy();
         }
     }
 
@@ -98,6 +98,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         if(bound) unbindService(connection);
+    }
+
+    public boolean isBound() {
+        return bound;
     }
 }
 

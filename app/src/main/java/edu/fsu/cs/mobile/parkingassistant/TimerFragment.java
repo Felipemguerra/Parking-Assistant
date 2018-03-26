@@ -38,8 +38,8 @@ public class TimerFragment extends Fragment {
         cancelBtn = v.findViewById(R.id.cancelBtn);
         p1 = v.findViewById(R.id.num1);
         p2 = v.findViewById(R.id.num2);
-        p3 = v.findViewById(R.id.num4);
-        p4 = v.findViewById(R.id.num3);
+        p3 = v.findViewById(R.id.num3);
+        p4 = v.findViewById(R.id.num4);
     }
 
     private void setText() {
@@ -60,8 +60,11 @@ public class TimerFragment extends Fragment {
                 if(p1.getValue() == 0 && p2.getValue() == 0 && p3.getValue() == 0 && p4.getValue() == 0) {
                     setBtn.setError("Please enter a valid time");
                 }
+                else if(((MainActivity)getActivity()).isBound()) {
+                    setBtn.setError("Cancel Timer first");
+                }
                 else {
-                    ((MainActivity) getActivity()).setTimer(p1.getValue()+p2.getValue(), p3.getValue()+p4.getValue());
+                    ((MainActivity) getActivity()).setTimer(p1.getValue()*10+p2.getValue(), p3.getValue()*10+p4.getValue());
                     ((MainActivity) getActivity()).setMainFrag();
                 }
             }

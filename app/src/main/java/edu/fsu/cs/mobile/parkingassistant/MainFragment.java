@@ -1,6 +1,7 @@
 package edu.fsu.cs.mobile.parkingassistant;
 
 import android.app.Fragment;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -55,14 +56,15 @@ public class MainFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 //check if locationSet is true
-                ((MainActivity)getActivity()).setFindFrag();
+                SharedPreferences settings = getActivity().getSharedPreferences("info", 0);
+                if(settings.contains("latitude") && settings.contains("longitude") && settings.contains("floor")) ((MainActivity)getActivity()).setFindFrag();
+                else find.setError("Set a location first");
             }
         });
 
         timer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //check if locationSet is true
                 ((MainActivity)getActivity()).setTimerFrag();
             }
         });

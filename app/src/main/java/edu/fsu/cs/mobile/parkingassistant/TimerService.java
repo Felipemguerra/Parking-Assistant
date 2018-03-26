@@ -40,11 +40,15 @@ public class TimerService extends Service {
     }
 
     public void start() {
+        NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        nm.cancelAll();
         timer = new Timer();
         timer.scheduleAtFixedRate(new TimerNotification(), 0, 1000);
     }
 
     public void cancel() {
+        NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        nm.cancelAll();
         onDestroy();
     }
 
@@ -55,8 +59,11 @@ public class TimerService extends Service {
         builder.setOnlyAlertOnce(false);
         builder.setContentTitle("ParkingAssistant");
         if(delay == 0){builder.setContentText("Times Up!");}
-        else {builder.setContentText("You have "+delay/1000+" seconds left");
-            builder.setOngoing(true);}
+        else {
+            int hour = delay/1000/60/60, min = (delay/1000-hour*60*60)/60, sec = (delay/1000-min*60 - hour*60*60);
+            builder.setContentText("You have "+hour+" hours, "+min+" minutes and "+sec+" seconds left");
+            builder.setOngoing(true);
+        }
         nm.notify(1, builder.build());
         if(delay == 0) {interf.finish();}
     }

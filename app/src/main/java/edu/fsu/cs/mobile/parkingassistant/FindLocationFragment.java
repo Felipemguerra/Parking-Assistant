@@ -1,11 +1,16 @@
 package edu.fsu.cs.mobile.parkingassistant;
 
+import android.Manifest;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,8 +33,8 @@ public class FindLocationFragment extends Fragment implements SensorEventListene
 
     private String floor;
 
-    private double originLat = 30.444630;
-    private double originLong = -84.298605;
+    private double originLat;
+    private double originLong;
 
     private SensorManager manager;
     private Sensor sensor1;
@@ -42,11 +47,15 @@ public class FindLocationFragment extends Fragment implements SensorEventListene
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_find_location, container, false);
-        floor = "4"; // get floor from shared preferences
-        //get origin lat and long
+        SharedPreferences settings = getActivity().getSharedPreferences("info", 0);
+        originLat = Double.parseDouble(settings.getString("latitude","30.444630"));
+        originLong = Double.parseDouble(settings.getString("longitude","-84.298605"));
+        floor = settings.getString("floor","NaN");
+
         getViews(v);
         setText();
         setListeners();
+
         manager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
         sensor1 = manager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
         sensor2 = manager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
@@ -60,7 +69,7 @@ public class FindLocationFragment extends Fragment implements SensorEventListene
     }
 
     private void setText() {
-        String text = getString(R.string.floorStart)+floor+getString(R.string.floorEnd);
+        String text = getString(R.string.floorStart)+floor;
         floorText.setText(text);
     }
 
@@ -91,8 +100,56 @@ public class FindLocationFragment extends Fragment implements SensorEventListene
         float[] matrix = new float[9];
         manager.getRotationMatrix(matrix, null, accelReading, magReading);
         manager.getOrientation(matrix, angles);
-        //get current coor, then calculate azimuth to destination
-        //then get current azimuth and update arrow based on both azimuths
+
+        double longitude = 0;
+        double latitude = 0;
+         if(getActivity().checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+           LocationManager lmanager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+           Location location = lmanager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+           if(location != null) {
+               latitude = location.getLatitude();
+               longitude = location.getLongitude();
+               float degree = (float)(Math.toDegrees(angles[0])+360)%360;
+               double cngLat = originLat - latitude;
+               double cngLong = originLong = longitude;
+               if(Math.abs(cngLat) > Math.abs(cngLong)) {
+                   if(cngLat > 0) {
+                       //need to go north
+                       changeArrowUp();
+                   }
+                   else {
+                       //need to go south
+                       changeArrowDown();
+                   }
+               }
+               else {
+                   if(cngLong > 0) {
+                       //need to go east
+                       changeArrowRight();
+                   }
+                   else {
+                       //need to go west
+                       changeArrowLeft();
+                   }
+               }
+           }
+        }
+        else {
+             getActivity().requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 0);
+         }
+    }
+
+    private void changeArrowUp() {
+        arrow.setImageResource(R.drawable.uparrow);
+    }
+    private void changeArrowDown() {
+        arrow.setImageResource(R.drawable.downarrow);
+    }
+    private void changeArrowRight() {
+        arrow.setImageResource(R.drawable.rightarrow);
+    }
+    private void changeArrowLeft() {
+        arrow.setImageResource(R.drawable.leftarrow);
     }
 
     public void onAccuracyChanged(Sensor sensor, int accuracy) {}

@@ -1,5 +1,11 @@
 package edu.fsu.cs.mobile.parkingassistant;
 
+import android.*;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -55,7 +61,26 @@ public class SetLocationFragment extends android.app.Fragment {
                     //get coordinates and save in shared preferences
                     //save floor
                     //set locationSet to true
-                    ((MainActivity)getActivity()).setMainFrag();
+                    double longitude = 0;
+                    double latitude = 0;
+                    if(getActivity().checkSelfPermission(android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                        LocationManager lmanager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+                        Location location = lmanager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                        if(location != null) {
+                            latitude = location.getLatitude();
+                            longitude = location.getLongitude();
+                            SharedPreferences settings = getActivity().getSharedPreferences("info", 0);
+                            SharedPreferences.Editor editor = settings.edit();
+                            editor.putString("latitude", String.valueOf(latitude));
+                            editor.putString("longitude", String.valueOf(longitude));
+                            editor.putString("floor", floors.getSelectedItem().toString());
+                            editor.commit();
+                            ((MainActivity)getActivity()).setMainFrag();
+                        }
+                    }
+                    else {
+                        getActivity().requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 0);
+                    }
                 }
             }
         });
