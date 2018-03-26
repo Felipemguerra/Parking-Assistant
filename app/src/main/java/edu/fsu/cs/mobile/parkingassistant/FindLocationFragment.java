@@ -10,6 +10,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -18,12 +19,13 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * Created by Felipe on 3/25/2018.
  */
 
-public class FindLocationFragment extends Fragment implements SensorEventListener {
+public class FindLocationFragment extends Fragment implements SensorEventListener, LocationListener {
 
     private Button backBtn;
 
@@ -43,6 +45,8 @@ public class FindLocationFragment extends Fragment implements SensorEventListene
     private final float[] accelReading = new float[3];
     private final float[] magReading = new float[3];
 
+    private LocationManager lmanager;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -51,6 +55,11 @@ public class FindLocationFragment extends Fragment implements SensorEventListene
         originLat = Double.parseDouble(settings.getString("latitude","30.444630"));
         originLong = Double.parseDouble(settings.getString("longitude","-84.298605"));
         floor = settings.getString("floor","NaN");
+
+        lmanager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+        if(getActivity().checkSelfPermission(android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+            lmanager.requestLocationUpdates(LocationManager.GPS_PROVIDER,0,0, this);
+        }
 
         getViews(v);
         setText();
@@ -104,14 +113,13 @@ public class FindLocationFragment extends Fragment implements SensorEventListene
         double longitude = 0;
         double latitude = 0;
          if(getActivity().checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-           LocationManager lmanager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
            Location location = lmanager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
            if(location != null) {
                latitude = location.getLatitude();
                longitude = location.getLongitude();
                float degree = (float)(Math.toDegrees(angles[0])+360)%360;
                double cngLat = originLat - latitude;
-               double cngLong = originLong = longitude;
+               double cngLong = originLong - longitude;
                if(Math.abs(cngLat) > Math.abs(cngLong)) {
                    if(cngLat > 0) {
                        //need to go north
@@ -145,6 +153,9 @@ public class FindLocationFragment extends Fragment implements SensorEventListene
                    }
                }
            }
+           else{
+               arrow.setImageResource(R.drawable.error);
+           }
         }
         else {
              getActivity().requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 0);
@@ -177,4 +188,16 @@ public class FindLocationFragment extends Fragment implements SensorEventListene
         super.onPause();
         manager.unregisterListener(this);
     }
+
+    @Override
+    public void onLocationChanged(Location location) {}
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {}
+
+    @Override
+    public void onProviderEnabled(String provider) {}
+
+    @Override
+    public void onProviderDisabled(String provider) {}
 }

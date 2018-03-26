@@ -1,10 +1,10 @@
 package edu.fsu.cs.mobile.parkingassistant;
 
-import android.*;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -15,7 +15,7 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-public class SetLocationFragment extends android.app.Fragment {
+public class SetLocationFragment extends android.app.Fragment implements LocationListener{
 
     private TextView title;
     private TextView instruct;
@@ -25,10 +25,16 @@ public class SetLocationFragment extends android.app.Fragment {
     private Button setBtn;
     private Button backBtn;
 
+    private LocationManager manager;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_set_location, container, false);
+        manager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+        if(getActivity().checkSelfPermission(android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+            manager.requestLocationUpdates(LocationManager.GPS_PROVIDER,0,0, this);
+        }
         getViews(v);
         setText();
         setListeners();
@@ -61,12 +67,11 @@ public class SetLocationFragment extends android.app.Fragment {
                     //get coordinates and save in shared preferences
                     //save floor
                     //set locationSet to true
-                    double longitude = 0;
-                    double latitude = 0;
+                    double longitude;
+                    double latitude;
                     if(getActivity().checkSelfPermission(android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                        LocationManager lmanager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-                        Location location = lmanager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                        if(location != null) {
+                        Location location = manager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                        if (location != null) {
                             latitude = location.getLatitude();
                             longitude = location.getLongitude();
                             SharedPreferences settings = getActivity().getSharedPreferences("info", 0);
@@ -75,7 +80,10 @@ public class SetLocationFragment extends android.app.Fragment {
                             editor.putString("longitude", String.valueOf(longitude));
                             editor.putString("floor", floors.getSelectedItem().toString());
                             editor.commit();
-                            ((MainActivity)getActivity()).setMainFrag();
+                            ((MainActivity) getActivity()).setMainFrag();
+                        }
+                        else{
+                            setBtn.setError("Problem fetching location");
                         }
                     }
                     else {
@@ -93,4 +101,16 @@ public class SetLocationFragment extends android.app.Fragment {
             }
         });
     }
+
+    @Override
+    public void onLocationChanged(Location location) {}
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {}
+
+    @Override
+    public void onProviderEnabled(String provider) {}
+
+    @Override
+    public void onProviderDisabled(String provider) {}
 }
