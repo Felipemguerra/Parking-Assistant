@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "162590744537",
+    "firebase_url": "https://parking-assistant-41274.firebaseio.com",
+    "project_id": "parking-assistant-41274",
+    "storage_bucket": "parking-assistant-41274.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:162590744537:android:aa22d7601c536ceb",
+        "android_client_info": {
+          "package_name": "edu.fsu.cs.mobile.parkingassistant"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "162590744537-v4ntp7rc65m53tchttnkt6j60bavectu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "edu.fsu.cs.mobile.parkingassistant",
+            "certificate_hash": "0235e43cb367cbb5e9709eb8ded7226b0f410f07"
+          }
+        },
+        {
+          "client_id": "162590744537-qutt2g82qgnc62n634teolpbremo9k26.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCzRavdfwNLHJ2w6VCb9irNuVSc-uxgYjU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "162590744537-qutt2g82qgnc62n634teolpbremo9k26.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
