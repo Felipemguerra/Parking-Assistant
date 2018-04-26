@@ -17,6 +17,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    repositories {
+        mavenCentral()
+    }
 }
 
 dependencies {
@@ -31,4 +34,13 @@ dependencies {
     implementation 'com.google.android.gms:play-services-maps:12.0.0'
     implementation 'com.google.android.gms:play-services:12.0.0'
     compile 'com.akexorcist:googledirectionlibrary:1.0.4'
+
+    implementation 'com.mapbox.mapboxsdk:mapbox-android-core:0.2.0'
+    implementation 'com.mapbox.mapboxsdk:mapbox-android-sdk:5.5.2'
+    implementation 'com.mapbox.mapboxsdk:mapbox-android-navigation:0.12.0'
+    implementation('com.mapbox.mapboxsdk:mapbox-android-navigation-ui:0.12.0') {
+        transitive = true
+    }
+
+    compile 'com.mapbox.mapboxsdk:mapbox-android-plugin-building:0.1.0'
 }

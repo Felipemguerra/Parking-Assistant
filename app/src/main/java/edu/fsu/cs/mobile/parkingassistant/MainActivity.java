@@ -2,16 +2,15 @@ package edu.fsu.cs.mobile.parkingassistant;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.app.Service;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.os.IBinder;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.widget.Toast;
+import android.os.IBinder;
+import android.support.v7.app.AppCompatActivity;
+
+import edu.fsu.cs.mobile.parkingassistant.activity.MapActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -19,6 +18,7 @@ public class MainActivity extends AppCompatActivity {
     private TimerService timer;
     private TimerInterface interf;
     private ServiceConnection connection;
+    private navigation nav;
     private boolean bound = false;
 
     @Override
@@ -38,10 +38,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void setLocationFrag() {
-        SetLocationFragment setFrag = new SetLocationFragment();
+        Intent intent = new Intent(this, MapActivity.class);
+        startActivity(intent);
+        /*
+        navigation setFrag = new navigation();
         FragmentTransaction transaction = manager.beginTransaction();
         transaction.replace(R.id.fragContainer, setFrag, "setFrag");
-        transaction.commit();
+        transaction.commit();*/
     }
 
     public void setFindFrag() {
@@ -99,9 +102,16 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
         if(bound) unbindService(connection);
     }
+    public void myMethod() {
+        navigation setFrag = new navigation();
+        FragmentTransaction transaction = manager.beginTransaction();
+        transaction.replace(R.id.fragContainer, setFrag, "setFrag");
+        transaction.commit();
+    }
 
     public boolean isBound() {
         return bound;
     }
 }
+
 
