@@ -43,5 +43,6 @@
     <string name="hours">Hours</string>
     <string name="phone">Phone</string>
     <string name="distance">mi</string>
+    <string name="title_activity_second_nav">secondNav</string>
 
 </resources>

@@ -20,7 +20,7 @@ public class SetLocationFragment extends android.app.Fragment implements Locatio
     private TextView title;
     private TextView instruct;
 
-    private Spinner floors;
+    //private Spinner floors;
 
     private Button setBtn;
     private Button backBtn;
@@ -42,28 +42,28 @@ public class SetLocationFragment extends android.app.Fragment implements Locatio
     }
 
     private void getViews(View v) {
-        title = v.findViewById(R.id.setTitleText);
-        instruct = v.findViewById(R.id.instructText);
-        floors = v.findViewById(R.id.floorSpinner);
+        //title = v.findViewById(R.id.setTitleText);
+        //instruct = v.findViewById(R.id.instructText);
+        //floors = v.findViewById(R.id.floorSpinner);
         setBtn = v.findViewById(R.id.locationBtn);
         backBtn = v.findViewById(R.id.setBackBtn);
     }
 
     private void setText() {
-        title.setText(getString(R.string.locationTitle));
-        instruct.setText(getString(R.string.instruct));
+        //title.setText(getString(R.string.locationTitle));
+        //instruct.setText(getString(R.string.instruct));
         setBtn.setText(getString(R.string.set));
         backBtn.setText(getString(R.string.goback));
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(), R.array.spinnerArray, R.layout.support_simple_spinner_dropdown_item);
-        floors.setAdapter(adapter);
+        //floors.setAdapter(adapter);
     }
 
     private void setListeners() {
         setBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(floors.getSelectedItemPosition() == 0) setBtn.setError("Please select your floor");
-                else {
+                //if(floors.getSelectedItemPosition() == 0) setBtn.setError("Please select your floor");
+                //else {
                     //get coordinates and save in shared preferences
                     //save floor
                     //set locationSet to true
@@ -78,7 +78,7 @@ public class SetLocationFragment extends android.app.Fragment implements Locatio
                             SharedPreferences.Editor editor = settings.edit();
                             editor.putString("latitude", String.valueOf(latitude));
                             editor.putString("longitude", String.valueOf(longitude));
-                            editor.putString("floor", floors.getSelectedItem().toString());
+                            //editor.putString("floor", floors.getSelectedItem().toString());
                             editor.commit();
                             ((MainActivity) getActivity()).setMainFrag();
                         }
@@ -90,7 +90,7 @@ public class SetLocationFragment extends android.app.Fragment implements Locatio
                         getActivity().requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 0);
                     }
 
-                }
+                //}
             }
         });
 

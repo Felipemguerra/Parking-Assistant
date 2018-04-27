@@ -17,6 +17,7 @@ public class MainFragment extends Fragment {
     private Button set;
     private Button find;
     private Button timer;
+    private Button spots;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -34,6 +35,7 @@ public class MainFragment extends Fragment {
         set = v.findViewById(R.id.locationBtn);
         find = v.findViewById(R.id.findBtn);
         timer = v.findViewById(R.id.timerBtn);
+        spots = v.findViewById(R.id.spotsBtn);
     }
 
     private void setText() {
@@ -66,6 +68,12 @@ public class MainFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 ((MainActivity)getActivity()).setTimerFrag();
+            }
+        });
+        spots.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ((MainActivity)getActivity()).setToSpotsFrag();
             }
         });
     }

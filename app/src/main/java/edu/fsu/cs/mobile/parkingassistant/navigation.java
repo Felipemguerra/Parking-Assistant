@@ -11,9 +11,6 @@ import android.view.ViewGroup;
 
 import java.util.List;
 
-import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-
 // classes needed to initialize map
 import com.mapbox.mapboxsdk.Mapbox;
 import com.mapbox.mapboxsdk.maps.MapView;
@@ -21,7 +18,6 @@ import com.mapbox.mapboxsdk.maps.MapView;
 // classes needed to add location layer
 import com.mapbox.geojson.Point;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
-import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 
 import android.location.Location;
 
@@ -30,10 +26,8 @@ import com.mapbox.mapboxsdk.geometry.LatLng;
 import android.support.annotation.NonNull;
 
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
-import com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerMode;
 import com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerPlugin;
 import com.mapbox.services.android.location.LostLocationEngine;
-import com.mapbox.services.android.navigation.ui.v5.NavigationActivity;
 import com.mapbox.services.android.navigation.ui.v5.NavigationLauncherOptions;
 import com.mapbox.services.android.telemetry.location.LocationEngine;
 import com.mapbox.services.android.telemetry.location.LocationEngineListener;
@@ -42,27 +36,8 @@ import com.mapbox.services.android.telemetry.permissions.PermissionsListener;
 import com.mapbox.services.android.telemetry.permissions.PermissionsManager;
 
 // classes needed to add a marker
-import com.mapbox.mapboxsdk.annotations.Marker;
-import com.mapbox.mapboxsdk.annotations.MarkerOptions;
-
-
-
-
-// classes to calculate a route
-import com.mapbox.services.android.navigation.ui.v5.route.NavigationMapRoute;
-import com.mapbox.services.android.navigation.v5.navigation.NavigationRoute;
-import com.mapbox.api.directions.v5.models.DirectionsResponse;
-import com.mapbox.api.directions.v5.models.DirectionsRoute;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
 import android.util.Log;
 
-// classes needed to launch navigation UI
-import android.view.View;
-import android.widget.Button;
 
 import com.mapbox.services.android.navigation.ui.v5.NavigationLauncher;
 
@@ -82,21 +57,9 @@ PermissionsListener {
     private LocationEngine locationEngine;
     private Location originLocation;
     Double latitudeDestination ;
-
     Double longitudeDestination;
-
-    private MapView mapView;
-
     private Point originPosition;
-
-
     private Point destinationPosition;
-
-    private DirectionsRoute currentRoute;
-    private static final String TAG = "DirectionsActivity";
-    private NavigationMapRoute navigationMapRoute;
-    private Marker destinationMarker;
-    private double lat ,longy;
     public navigation() {
         // Required empty public constructor
     }
@@ -117,18 +80,6 @@ PermissionsListener {
 
         View v = inflater.inflate(R.layout.fragment_navigation, container, false);
         Mapbox.getInstance(this.getContext(), "pk.eyJ1IjoicmVobHVjdCIsImEiOiJjamY2NjljYWowMGpwNDBuODh4Z2g4YTZmIn0.Bjo0LAOxeHjkE8-VcFSmkQ");
-        /*
-        mapView = (MapView) v.findViewById(R.id.mapView);
-        mapView.onCreate(savedInstanceState);*/
-
-        /*
-        mapView.getMapAsync(new OnMapReadyCallback() {
-            @Override
-            public void onMapReady(final MapboxMap mapboxMap) {
-                map = mapboxMap;
-                enableLocationPlugin();
-            }
-        } );*/
         enableLocationPlugin();
 
         return v;
@@ -140,10 +91,6 @@ PermissionsListener {
         if (PermissionsManager.areLocationPermissionsGranted(this.getContext())) {
             // Create an instance of LOST location engine
             initializeLocationEngine();
-/*
-            locationPlugin = new LocationLayerPlugin(mapView, map, locationEngine);
-            locationPlugin.setLocationLayerEnabled(LocationLayerMode.TRACKING);
-            */
         } else {
             permissionsManager = new PermissionsManager(this);
             permissionsManager.requestLocationPermissions(this.getActivity());
@@ -203,7 +150,6 @@ PermissionsListener {
 
     @Override
     public void onLocationChanged(Location location) {
-
         if (location != null) {
             originLocation = location;
 
@@ -218,7 +164,7 @@ PermissionsListener {
             // Pass in your Amazon Polly pool id for speech synthesis using Amazon Polly
             // Set to null to use the default Android speech synthesizer
             String awsPoolId = null;
-            boolean simulateRoute = true;
+            boolean simulateRoute = false;
             NavigationLauncherOptions options = NavigationLauncherOptions.builder()
                     .origin(origin)
                     .destination(destination)
@@ -230,6 +176,7 @@ PermissionsListener {
             NavigationLauncher.startNavigation(this.getActivity(), options);
             /*setCameraPosition(location);*/
             locationEngine.removeLocationEngineListener(this);
+            ((mapToNav)getActivity()).finish();
         }
     }
 

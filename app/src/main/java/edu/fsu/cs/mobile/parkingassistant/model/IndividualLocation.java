@@ -14,11 +14,11 @@ public class IndividualLocation {
   private String distance;
   private LatLng location;
 
-  public IndividualLocation(String name, String address, String hours, String phoneNum, LatLng location) {
-    this.name = name;
-    this.address = address;
-    this.hours = hours;
-    this.phoneNum = phoneNum;
+  public IndividualLocation(/*String name, String address, String hours, String phoneNum, */LatLng location) {
+    //this.name = name;
+    //this.address = address;
+    //this.hours = hours;
+   // this.phoneNum = phoneNum;
     this.location = location;
   }
 

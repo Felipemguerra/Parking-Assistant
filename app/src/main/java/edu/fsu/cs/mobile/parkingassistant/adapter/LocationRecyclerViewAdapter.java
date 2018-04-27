@@ -88,13 +88,13 @@ public class LocationRecyclerViewAdapter extends
 
     singleLocationLatLng = locationCard.getLocation();
 
-    card.nameTextView.setText(locationCard.getName());
-    card.addressTextView.setText(locationCard.getAddress());
-    card.phoneNumTextView.setText(locationCard.getPhoneNum());
-    card.hoursTextView.setText(locationCard.getHours());
-    card.distanceNumberTextView.setText(locationCard.getDistance());
+    //card.nameTextView.setText(locationCard.getName());
+    //card.addressTextView.setText(locationCard.getAddress());
+    //card.phoneNumTextView.setText(locationCard.getPhoneNum());
+    //card.hoursTextView.setText(locationCard.getHours());
+    //card.distanceNumberTextView.setText(locationCard.getDistance());
 
-    switch (selectedTheme) {
+    /*switch (selectedTheme) {
       case R.style.AppTheme_Blue:
         emojiForCircle = ResourcesCompat.getDrawable(context.getResources(), R.drawable.ice_cream_icon, null);
         backgroundCircle = ResourcesCompat.getDrawable(context.getResources(), R.drawable.blue_circle, null);
@@ -126,16 +126,14 @@ public class LocationRecyclerViewAdapter extends
           100f,
           100f);
         break;
-      case R.style.AppTheme_Neutral:
-        emojiForCircle = ResourcesCompat.getDrawable(context.getResources(), R.drawable.house_icon, null);
+      case R.style.AppTheme_Neutral:*/
+        //emojiForCircle = ResourcesCompat.getDrawable(context.getResources(), R.drawable.house_icon, null);
         backgroundCircle = ResourcesCompat.getDrawable(context.getResources(), R.drawable.white_circle, null);
         setColors(R.color.colorPrimaryDark_neutral, R.color.black, R.color.black, R.color.black,
           R.color.black, R.color.black,
           R.color.black, R.color.black, R.color.black);
-        setAlphas(card, .37f, .37f, 100f, .37f,
-          100f,
-          .37f);
-        break;
+       // setAlphas(card, .37f, .37f, 100f, .37f,100f,.37f);
+       /*break;
       case R.style.AppTheme_Gray:
         emojiForCircle = ResourcesCompat.getDrawable(context.getResources(), R.drawable.bicycle_icon, null);
         backgroundCircle = ResourcesCompat.getDrawable(context.getResources(), R.drawable.gray_circle, null);
@@ -146,19 +144,19 @@ public class LocationRecyclerViewAdapter extends
           100f,
           .41f);
         break;
-    }
+    }*/
 
-    card.emojiImageView.setImageDrawable(emojiForCircle);
-    card.constraintUpperColorSection.setBackgroundColor(upperCardSectionColor);
-    card.backgroundCircleImageView.setImageDrawable(backgroundCircle);
-    card.nameTextView.setTextColor(locationNameColor);
-    card.phoneNumTextView.setTextColor(locationPhoneNumColor);
-    card.hoursTextView.setTextColor(locationHoursColor);
-    card.hoursHeaderTextView.setTextColor(locationHoursHeaderColor);
-    card.distanceNumberTextView.setTextColor(locationDistanceNumColor);
-    card.milesAbbreviationTextView.setTextColor(milesAbbreviationColor);
-    card.addressTextView.setTextColor(locationAddressColor);
-    card.phoneHeaderTextView.setTextColor(locationPhoneHeaderColor);
+    //card.emojiImageView.setImageDrawable(emojiForCircle);
+    //card.constraintUpperColorSection.setBackgroundColor(upperCardSectionColor);
+    //card.backgroundCircleImageView.setImageDrawable(backgroundCircle);
+    //card.nameTextView.setTextColor(locationNameColor);
+    //card.phoneNumTextView.setTextColor(locationPhoneNumColor);
+    //card.hoursTextView.setTextColor(locationHoursColor);
+    //card.hoursHeaderTextView.setTextColor(locationHoursHeaderColor);
+    //card.distanceNumberTextView.setTextColor(locationDistanceNumColor);
+    //card.milesAbbreviationTextView.setTextColor(milesAbbreviationColor);
+    //card.addressTextView.setTextColor(locationAddressColor);
+    //card.phoneHeaderTextView.setTextColor(locationPhoneHeaderColor);
   }
 
   private void setColors(int colorForUpperCard, int colorForName, int colorForAddress,
@@ -204,29 +202,36 @@ public class LocationRecyclerViewAdapter extends
 
     ViewHolder(View itemView) {
       super(itemView);
-      nameTextView = itemView.findViewById(R.id.location_name_tv);
-      addressTextView = itemView.findViewById(R.id.location_description_tv);
-      phoneNumTextView = itemView.findViewById(R.id.location_phone_num_tv);
-      phoneHeaderTextView = itemView.findViewById(R.id.phone_header_tv);
-      hoursTextView = itemView.findViewById(R.id.location_hours_tv);
-      backgroundCircleImageView = itemView.findViewById(R.id.background_circle);
-      emojiImageView = itemView.findViewById(R.id.emoji);
-      constraintUpperColorSection = itemView.findViewById(R.id.constraint_upper_color);
-      distanceNumberTextView = itemView.findViewById(R.id.distance_num_tv);
-      hoursHeaderTextView = itemView.findViewById(R.id.hours_header_tv);
-      milesAbbreviationTextView = itemView.findViewById(R.id.miles_mi_tv);
+      //nameTextView = itemView.findViewById(R.id.location_name_tv);
+      //addressTextView = itemView.findViewById(R.id.location_description_tv);
+      //phoneNumTextView = itemView.findViewById(R.id.location_phone_num_tv);
+      //phoneHeaderTextView = itemView.findViewById(R.id.phone_header_tv);
+      //hoursTextView = itemView.findViewById(R.id.location_hours_tv);
+      //backgroundCircleImageView = itemView.findViewById(R.id.background_circle);
+      //emojiImageView = itemView.findViewById(R.id.emoji);
+      //constraintUpperColorSection = itemView.findViewById(R.id.constraint_upper_color);
+      //distanceNumberTextView = itemView.findViewById(R.id.distance_num_tv);
+      //hoursHeaderTextView = itemView.findViewById(R.id.hours_header_tv);
+      //milesAbbreviationTextView = itemView.findViewById(R.id.miles_mi_tv);
 
       cardView = itemView.findViewById(R.id.map_view_location_card);
-      naviButton = itemView.findViewById(R.id.navi);
-      naviButton.setOnClickListener(new View.OnClickListener() {
+      //naviButton = itemView.findViewById(R.id.navi);
+      ConstraintLayout layout = itemView.findViewById(R.id.navi2);
+      layout.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-          Button b = (Button)view;
-          String text = b.getText().toString();
-          fam();
 
+          fam();
         }
       });
+      /*naviButton.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+           Button b = (Button)view;
+          String text = b.getText().toString();
+          Log.i("here", "success");
+        }
+      });*/
     }
 
     private void fam() {

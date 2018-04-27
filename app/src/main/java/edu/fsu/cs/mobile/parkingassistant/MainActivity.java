@@ -6,9 +6,14 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+
+import com.google.firebase.FirebaseApp;
+import com.mapbox.mapboxsdk.geometry.LatLng;
 
 import edu.fsu.cs.mobile.parkingassistant.activity.MapActivity;
 
@@ -30,6 +35,15 @@ public class MainActivity extends AppCompatActivity {
         setMainFrag();
     }
 
+    public void go() {
+        Intent intent = new Intent(this,mapToNav.class);
+        SharedPreferences settings = getSharedPreferences("info", 0);
+        LatLng location = new LatLng(Double.parseDouble(settings.getString("spotlatitude","30.444630")),Double.parseDouble(settings.getString("spotlongitude","-84.298605")));
+        intent.putExtra ("latitude", location.getLatitude());
+        intent.putExtra("longitude", location.getLongitude());
+        startActivity(intent);
+    }
+
     public void setMainFrag() {
         MainFragment mainFrag = new MainFragment();
         FragmentTransaction transaction = manager.beginTransaction();
@@ -37,21 +51,36 @@ public class MainActivity extends AppCompatActivity {
         transaction.commit();
     }
 
-    public void setLocationFrag() {
+    public void setToSpotsFrag() {
         Intent intent = new Intent(this, MapActivity.class);
         startActivity(intent);
-        /*
-        navigation setFrag = new navigation();
+    }
+
+    public void setLocationFrag() {
+        SetLocationFragment setFrag = new SetLocationFragment();
         FragmentTransaction transaction = manager.beginTransaction();
         transaction.replace(R.id.fragContainer, setFrag, "setFrag");
-        transaction.commit();*/
+        transaction.commit();
     }
 
     public void setFindFrag() {
-        FindLocationFragment findFrag = new FindLocationFragment();
+        Intent intent = new Intent(this,mapToNav.class);
+        SharedPreferences settings = getSharedPreferences("info", 0);
+        LatLng location;
+        location = new LatLng(Double.parseDouble(settings.getString("latitude","30.444630")),Double.parseDouble(settings.getString("longitude","-84.298605")));
+        intent.putExtra ("latitude", location.getLatitude());
+        intent.putExtra("longitude", location.getLongitude());
+        startActivity(intent);
+
+        //Bundle b = new Bundle();
+        //b.putDouble("latitude", location.getLatitude());
+        //b.putDouble("longitude", location.getLongitude());
+        //temp t = new temp(b, this);
+
+        /*FindLocationFragment findFrag = new FindLocationFragment();
         FragmentTransaction transaction = manager.beginTransaction();
         transaction.replace(R.id.fragContainer, findFrag, "findFrag");
-        transaction.commit();
+        transaction.commit();*/
     }
 
     public void setTimerFrag() {
@@ -112,6 +141,8 @@ public class MainActivity extends AppCompatActivity {
     public boolean isBound() {
         return bound;
     }
+
+
 }
 
 

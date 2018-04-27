@@ -53,7 +53,7 @@ public class FindLocationFragment extends Fragment implements SensorEventListene
         SharedPreferences settings = getActivity().getSharedPreferences("info", 0);
         originLat = Double.parseDouble(settings.getString("latitude","30.444630"));
         originLong = Double.parseDouble(settings.getString("longitude","-84.298605"));
-        floor = settings.getString("floor","NaN");
+        //floor = settings.getString("floor","NaN");
 
         lmanager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
         if(getActivity().checkSelfPermission(android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){

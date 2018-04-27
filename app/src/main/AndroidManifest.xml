@@ -33,7 +33,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".mapToNav"></activity>
+        <activity android:name=".mapToNav" />
     </application>
 
 </manifest>
