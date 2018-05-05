@@ -10,9 +10,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-
-import com.google.firebase.FirebaseApp;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 
 import edu.fsu.cs.mobile.parkingassistant.activity.MapActivity;
@@ -35,14 +32,14 @@ public class MainActivity extends AppCompatActivity {
         setMainFrag();
     }
 
-    public void go() {
+    /*public void go() {
         Intent intent = new Intent(this,mapToNav.class);
         SharedPreferences settings = getSharedPreferences("info", 0);
         LatLng location = new LatLng(Double.parseDouble(settings.getString("spotlatitude","30.444630")),Double.parseDouble(settings.getString("spotlongitude","-84.298605")));
         intent.putExtra ("latitude", location.getLatitude());
         intent.putExtra("longitude", location.getLongitude());
         startActivity(intent);
-    }
+    }*/
 
     public void setMainFrag() {
         MainFragment mainFrag = new MainFragment();
@@ -71,16 +68,6 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra ("latitude", location.getLatitude());
         intent.putExtra("longitude", location.getLongitude());
         startActivity(intent);
-
-        //Bundle b = new Bundle();
-        //b.putDouble("latitude", location.getLatitude());
-        //b.putDouble("longitude", location.getLongitude());
-        //temp t = new temp(b, this);
-
-        /*FindLocationFragment findFrag = new FindLocationFragment();
-        FragmentTransaction transaction = manager.beginTransaction();
-        transaction.replace(R.id.fragContainer, findFrag, "findFrag");
-        transaction.commit();*/
     }
 
     public void setTimerFrag() {
@@ -130,12 +117,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         if(bound) unbindService(connection);
-    }
-    public void myMethod() {
-        navigation setFrag = new navigation();
-        FragmentTransaction transaction = manager.beginTransaction();
-        transaction.replace(R.id.fragContainer, setFrag, "setFrag");
-        transaction.commit();
     }
 
     public boolean isBound() {

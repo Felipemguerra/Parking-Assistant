@@ -1,7 +1,6 @@
 package edu.fsu.cs.mobile.parkingassistant.activity;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
@@ -20,9 +19,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.Toast;
-
 import android.location.LocationListener;
-
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -33,62 +30,43 @@ import com.mapbox.api.directions.v5.DirectionsCriteria;
 import com.mapbox.api.directions.v5.MapboxDirections;
 import com.mapbox.api.directions.v5.models.DirectionsResponse;
 import com.mapbox.api.directions.v5.models.DirectionsRoute;
-import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.geojson.LineString;
 import com.mapbox.geojson.Point;
 import com.mapbox.mapboxsdk.Mapbox;
 import com.mapbox.mapboxsdk.annotations.Icon;
-import com.mapbox.mapboxsdk.annotations.IconFactory;
 import com.mapbox.mapboxsdk.annotations.Marker;
 import com.mapbox.mapboxsdk.annotations.MarkerOptions;
 import com.mapbox.mapboxsdk.annotations.PolylineOptions;
 import com.mapbox.mapboxsdk.camera.CameraPosition;
-import com.mapbox.mapboxsdk.camera.CameraUpdate;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
-import com.mapbox.mapboxsdk.constants.Style;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.geometry.LatLngBounds;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
-
-import edu.fsu.cs.mobile.parkingassistant.MainActivity;
 import edu.fsu.cs.mobile.parkingassistant.adapter.LocationRecyclerViewAdapter;
 import edu.fsu.cs.mobile.parkingassistant.model.IndividualLocation;
 import edu.fsu.cs.mobile.parkingassistant.util.LinearLayoutManagerWithSmoothScroller;
-
 import com.mapbox.turf.TurfConversion;
-
-import java.io.IOException;
-import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
-
 import edu.fsu.cs.mobile.parkingassistant.R;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.mapbox.core.constants.Constants.PRECISION_6;
-import static edu.fsu.cs.mobile.parkingassistant.util.StringConstants.SELECTED_THEME;
-
 /**
  * Activity with a Mapbox map and recyclerview to view various locations
  */
 public class MapActivity extends AppCompatActivity implements LocationRecyclerViewAdapter.ClickListener, LocationListener {
-
-  private static final LatLngBounds LOCKED_MAP_CAMERA_BOUNDS = new LatLngBounds.Builder()
-          .include(new LatLng(30.452241, -84.307529))
-          .include(new LatLng(30.434521, -84.284569))
-          .build();
   private static  LatLng MOCK_DEVICE_LOCATION_LAT_LNG ;
   private static final int MAPBOX_LOGO_OPACITY = 75;
   private static final int CAMERA_MOVEMENT_SPEED_IN_MILSECS = 1200;
   private static final float NAVIGATION_LINE_WIDTH = 9;
   private DirectionsRoute currentRoute;
-  private FeatureCollection featureCollection;
   private MapboxMap mapboxMap;
   private MapView mapView;
   private MapboxDirections directionsApiClient;
@@ -98,7 +76,6 @@ public class MapActivity extends AppCompatActivity implements LocationRecyclerVi
   private LocationRecyclerViewAdapter styleRvAdapter;
   private int chosenTheme;
   private LocationManager manager;
-  private String TAG = "MapActivity";
   double longitude;
   double latitude;
   private FirebaseFirestore database;
@@ -127,14 +104,6 @@ public class MapActivity extends AppCompatActivity implements LocationRecyclerVi
     // Inflate the layout with the the MapView. Always inflate this after the Mapbox access token is configured.
     setContentView(R.layout.activity_map);
 
-    // Create a GeoJSON feature collection from the GeoJSON file in the assets folder.
-    /*try {
-      getFeatureCollectionFromJson();
-    } catch (Exception exception) {
-      Log.e("MapActivity", "onCreate: " + exception);
-      Toast.makeText(this, R.string.failure_to_load_file, Toast.LENGTH_LONG).show();
-    }*/
-
     // Initialize a list of IndividualLocation objects for future use with recyclerview
     listOfIndividualLocations = new ArrayList<>();
 
@@ -153,17 +122,10 @@ public class MapActivity extends AppCompatActivity implements LocationRecyclerVi
 
         // Initialize the custom class that handles marker icon creation and map styling based on the selected theme
         customThemeManager = new CustomThemeManager(chosenTheme, MapActivity.this, mapView, mapboxMap);
-        //customThemeManager.initializeTheme();
 
         // Adjust the opacity of the Mapbox logo in the lower left hand corner of the map
         ImageView logo = mapView.findViewById(R.id.logoView);
         logo.setImageAlpha(MAPBOX_LOGO_OPACITY);
-
-        // Set bounds for the map camera so that the user can't pan the map outside of the NYC area
-        //mapboxMap.setLatLngBoundsForCameraTarget(LOCKED_MAP_CAMERA_BOUNDS);
-
-        // Create a list of features from the feature collection
-        //List<Feature> featureList = featureCollection.features();
 
         list = new ArrayList<>();
         database.collection("spots").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -177,22 +139,16 @@ public class MapActivity extends AppCompatActivity implements LocationRecyclerVi
             }
           }
         });
-
-        // Loop through the locations to add markers to the map
       }
     });
   }
 
   private void populate() {
     for (int x = 0; x < list.size(); x++) {
-      Log.i("map", String.valueOf(x));
       //Feature singleLocation = featureList.get(x);
       LatLng singleLocation = list.get(x);
-      // Get the single location's String properties to place in its map marker
 
       // Get the single location's LatLng coordinates
-      //Double stringLong = ((Point) singleLocation.geometry()).coordinates().get(0);
-      //Double stringLat = ((Point) singleLocation.geometry()).coordinates().get(1);
       Double stringLong = singleLocation.getLongitude();
       Double stringLat = singleLocation.getLatitude();
 
@@ -205,21 +161,16 @@ public class MapActivity extends AppCompatActivity implements LocationRecyclerVi
       // Add the location's marker to the map
       mapboxMap.addMarker(new MarkerOptions()
               .position(singleLocationLatLng)
-              /*.title(singleLocationName)*/
               .icon(customThemeManager.getUnselectedMarkerIcon()));
 
       // Call getInformationFromDirectionsApi() to eventually display the location's
       // distance from mocked device location
-      Log.i("MapActivity", "yi");
       getInformationFromDirectionsApi(singleLocationLatLng.getLatitude(),
               singleLocationLatLng.getLongitude(), false, x);
-      Log.i("MapActivity", "yp");
     }
 
     // Add the fake device location marker to the map. In a real use case scenario, the Mapbox location layer plugin
     // can be used to easily display the device's location
-    Log.i("MapActivity", "yo");
-    //addMockDeviceLocationMarkerToMap();
     setUpMarkerClickListener();
     setUpRecyclerViewOfLocationCards(chosenTheme);
   }
@@ -242,10 +193,6 @@ public class MapActivity extends AppCompatActivity implements LocationRecyclerVi
 
     // Get the selected individual location via its card's position in the recyclerview of cards
     IndividualLocation selectedLocation = listOfIndividualLocations.get(position);
-
-    // Retrieve and change the selected card's marker to the selected marker icon
-    Marker markerTiedToSelectedCard = mapboxMap.getMarkers().get(position);
-    //adjustMarkerSelectStateIcons(markerTiedToSelectedCard);
 
     // Reposition the map camera target to the selected marker
     LatLng selectedLocationLatLng = selectedLocation.getLocation();
@@ -321,40 +268,6 @@ public class MapActivity extends AppCompatActivity implements LocationRecyclerVi
     mapboxMap.animateCamera(CameraUpdateFactory.newCameraPosition(newCameraPosition), CAMERA_MOVEMENT_SPEED_IN_MILSECS);
   }
 
-  private void addMockDeviceLocationMarkerToMap() {
-    // Add the fake user location marker to the map
-    Log.i("MapActivity", String.valueOf(MOCK_DEVICE_LOCATION_LAT_LNG));
-    mapboxMap.addMarker(new MarkerOptions()
-      .position(MOCK_DEVICE_LOCATION_LAT_LNG)
-      .title(getString(R.string.mock_location_title))
-      .icon(customThemeManager.getMockLocationIcon()));
-  }
-
-  private void getFeatureCollectionFromJson() throws IOException {
-    try {
-      // Use fromJson() method to convert the GeoJSON file into a usable FeatureCollection object
-      featureCollection = FeatureCollection.fromJson(loadGeoJsonFromAsset("list_of_locations.geojson"));
-    } catch (Exception exception) {
-      Log.e("MapActivity", "getFeatureCollectionFromJson: " + exception);
-    }
-  }
-
-  private String loadGeoJsonFromAsset(String filename) {
-    try {
-      // Load the GeoJSON file from the local asset folder
-      InputStream is = getAssets().open(filename);
-      int size = is.available();
-      byte[] buffer = new byte[size];
-      is.read(buffer);
-      is.close();
-      Log.i("Map", new String(buffer, "UTF-8"));
-      return new String(buffer, "UTF-8");
-    } catch (Exception exception) {
-      Log.e("MapActivity", "Exception Loading GeoJSON: " + exception.toString());
-      exception.printStackTrace();
-      return null;
-    }
-  }
 
   private void setUpRecyclerViewOfLocationCards(int chosenTheme) {
     // Initialize the recyclerview of location cards and a custom class for automatic card scrolling
@@ -375,12 +288,6 @@ public class MapActivity extends AppCompatActivity implements LocationRecyclerVi
 
         // Get the position of the selected marker
         LatLng positionOfSelectedMarker = marker.getPosition();
-        /*SharedPreferences settings = getApplication().getSharedPreferences("info", 0);
-        SharedPreferences.Editor editor = settings.edit();
-        editor.putString("spotlatitude", String.valueOf(latitude));
-        editor.putString("spotlongitude", String.valueOf(longitude));
-        editor.commit();
-        finish();*/
 
         // Check that the selected marker isn't the mock device location marker
         if (!marker.getPosition().equals(MOCK_DEVICE_LOCATION_LAT_LNG)) {
@@ -390,43 +297,14 @@ public class MapActivity extends AppCompatActivity implements LocationRecyclerVi
               // Scroll the recyclerview to the selected marker's card. It's "x-1" below because
               // the mock device location marker is part of the marker list but doesn't have its own card
               // in the actual recyclerview.
-
-
               locationsRecyclerView.smoothScrollToPosition(x);
             }
           }
-          //adjustMarkerSelectStateIcons(marker);
         }
         // Return true so that the selected marker's info window doesn't pop up
         return true;
       }
     });
-  }
-
-  private void adjustMarkerSelectStateIcons(Marker marker) {
-    // Set all of the markers' icons to the unselected marker icon
-    for (Marker singleMarker : mapboxMap.getMarkers()) {
-      if (!singleMarker.getTitle().equals(getString(R.string.mock_location_title))) {
-        singleMarker.setIcon(customThemeManager.getUnselectedMarkerIcon());
-      }
-    }
-
-    // Change the selected marker's icon to a selected state marker except if the mock device location marker is selected
-    if (!marker.getIcon().equals(customThemeManager.getMockLocationIcon())) {
-      marker.setIcon(customThemeManager.getSelectedMarkerIcon());
-    }
-
-    // Get the directionsApiClient route to the selected marker except if the mock device location marker is selected
-    if (!marker.getIcon().equals(customThemeManager.getMockLocationIcon())) {
-      // Check for an internet connection before making the call to Mapbox Directions API
-      if (deviceHasInternetConnection()) {
-        // Start the call to the Mapbox Directions API
-        getInformationFromDirectionsApi(marker.getPosition().getLatitude(),
-          marker.getPosition().getLongitude(), true, null);
-      } else {
-        Toast.makeText(this, R.string.no_internet_message, Toast.LENGTH_LONG).show();
-      }
-    }
   }
 
   private void drawNavigationPolylineRoute(DirectionsRoute route) {
@@ -520,84 +398,16 @@ public class MapActivity extends AppCompatActivity implements LocationRecyclerVi
   class CustomThemeManager {
     private static final String BUILDING_EXTRUSION_COLOR = "#c4dbed";
     private static final float BUILDING_EXTRUSION_OPACITY = .8f;
-    private int selectedTheme;
-    private Context context;
     private Icon unselectedMarkerIcon;
-    private Icon selectedMarkerIcon;
-    private Icon mockLocationIcon;
     private int navigationLineColor;
-    private MapboxMap mapboxMap;
-    private MapView mapView;
 
     CustomThemeManager(int selectedTheme, Context context,
                        MapView mapView, MapboxMap mapboxMap) {
-      this.selectedTheme = selectedTheme;
-      this.context = context;
-      this.mapboxMap = mapboxMap;
-      this.mapView = mapView;
-    }
-
-    private void initializeTheme() {
-      /*switch (selectedTheme) {
-        case R.style.AppTheme_Blue:
-          mapboxMap.setStyle(getString(R.string.blue_map_style));
-          navigationLineColor = getResources().getColor(R.color.navigationRouteLine_blue);
-          unselectedMarkerIcon = IconFactory.getInstance(context).fromResource(R.drawable.blue_unselected_ice_cream);
-          selectedMarkerIcon = IconFactory.getInstance(context).fromResource(R.drawable.blue_selected_ice_cream);
-          mockLocationIcon = IconFactory.getInstance(context).fromResource(R.drawable.blue_user_location);
-          showBuildingExtrusions();
-          break;
-        case R.style.AppTheme_Purple:
-          mapboxMap.setStyle(getString(R.string.purple_map_style));
-          navigationLineColor = getResources().getColor(R.color.navigationRouteLine_purple);
-          unselectedMarkerIcon = IconFactory.getInstance(context).fromResource(R.drawable.purple_unselected_burger);
-          selectedMarkerIcon = IconFactory.getInstance(context).fromResource(R.drawable.purple_selected_burger);
-          mockLocationIcon = IconFactory.getInstance(context).fromResource(R.drawable.purple_user_location);
-          break;
-        case R.style.AppTheme_Green:
-          mapboxMap.setStyle(getString(R.string.terminal_map_style));
-          navigationLineColor = getResources().getColor(R.color.navigationRouteLine_green);
-          unselectedMarkerIcon = IconFactory.getInstance(context).fromResource(R.drawable.green_unselected_money);
-          selectedMarkerIcon = IconFactory.getInstance(context).fromResource(R.drawable.green_selected_money);
-          mockLocationIcon = IconFactory.getInstance(context).fromResource(R.drawable.green_user_location);
-          break;
-        case R.style.AppTheme_Neutral:
-          mapboxMap.setStyle(Style.MAPBOX_STREETS);
-          navigationLineColor = getResources().getColor(R.color.navigationRouteLine_neutral);
-          unselectedMarkerIcon = IconFactory.getInstance(context).fromResource(R.drawable.white_unselected_house);
-          selectedMarkerIcon = IconFactory.getInstance(context).fromResource(R.drawable.gray_selected_house);
-          mockLocationIcon = IconFactory.getInstance(context).fromResource(R.drawable.neutral_orange_user_location);
-          break;
-        case R.style.AppTheme_Gray:*/
-          mapboxMap.setStyle(Style.LIGHT);
-          navigationLineColor = getResources().getColor(R.color.navigationRouteLine_gray);
-          //unselectedMarkerIcon = IconFactory.getInstance(context).fromResource(R.drawable.white_unselected_bike);
-          //selectedMarkerIcon = IconFactory.getInstance(context).fromResource(R.drawable.gray_selected_bike);
-          mockLocationIcon = IconFactory.getInstance(context).fromResource(R.drawable.gray_user_location);
-          //break;
-     // }
-    }
-
-    private void showBuildingExtrusions() {
-      // Use the Mapbox building plugin to display and customize the opacity/color of building extrusions
-      BuildingPlugin buildingPlugin = new BuildingPlugin(mapView, mapboxMap);
-      buildingPlugin.setVisibility(true);
-      buildingPlugin.setOpacity(BUILDING_EXTRUSION_OPACITY);
-      buildingPlugin.setColor(Color.parseColor(BUILDING_EXTRUSION_COLOR));
     }
 
     Icon getUnselectedMarkerIcon() {
       return unselectedMarkerIcon;
     }
-
-    Icon getSelectedMarkerIcon() {
-      return selectedMarkerIcon;
-    }
-
-    Icon getMockLocationIcon() {
-      return mockLocationIcon;
-    }
-
     int getNavigationLineColor() {
       return navigationLineColor;
     }

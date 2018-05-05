@@ -117,11 +117,6 @@ PermissionsListener {
 
     }
 
-    private void setCameraPosition(Location location) {
-        map.animateCamera(CameraUpdateFactory.newLatLngZoom(
-                new LatLng(location.getLatitude(), location.getLongitude()), 13));
-    }
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         permissionsManager.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -176,7 +171,7 @@ PermissionsListener {
             NavigationLauncher.startNavigation(this.getActivity(), options);
             /*setCameraPosition(location);*/
             locationEngine.removeLocationEngineListener(this);
-            ((mapToNav)getActivity()).finish();
+            getActivity().finish();
         }
     }
 
